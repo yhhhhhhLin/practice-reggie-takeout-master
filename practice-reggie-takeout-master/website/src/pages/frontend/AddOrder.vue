@@ -12,10 +12,32 @@ import {imgPath} from "@/js/frontend/common.js";
 import {cartListApi} from "@/api/frontend/main.js";
 import {getDefaultAddressApi} from "@/api/frontend/address.js";
 import {useRouter} from "vue-router";
-import {addOrderApi} from "@/api/frontend/order.js";
+import {addOrderApi, orderPayment} from "@/api/frontend/order.js";
 import {base} from "@/js/frontend/base.js";
+import {Dialog} from "vant";
 
 const router = useRouter()
+
+const payMethods = [
+  {id: 1, name: "微信支付", icon: "wechat"},
+  {id: 2, name: "支付宝", icon: "alipay"},
+];
+
+// 显示支付弹窗
+const showPaymentDialog = () => {
+  data.showPayDialog = true;
+};
+
+// 切换支付方式
+const selectPayMethod = (methodId) => {
+  data.selectedPayMethod = methodId;
+};
+
+// 切换配送方式
+const changeDeliveryStatus = (status) => {
+  data.deliveryStatus = status;
+};
+
 
 const data = reactive({
   address: {
@@ -25,6 +47,10 @@ const data = reactive({
     sex: '1',
     id: undefined
   },
+  orderNumber: null,
+  selectedPayMethod: 1,
+  deliveryStatus: 1,
+  showPayDialog: false,
   finishTime: '',//送达时间
   cartData: [],
   note: ''//备注信息
@@ -77,15 +103,26 @@ const defaultAddress = async () => {
 //获取送达时间
 const getFinishTime = () => {
   let now = new Date()
+  let year = now.getFullYear()
+  let month = now.getMonth() + 1
+  let day = now.getDate()
   let hour = now.getHours() + 1
   let minute = now.getMinutes()
+
+
+  if (month.toString().length < 2) {
+    month = '0' + month
+  }
+  if (day.toString().length < 2) {
+    day = '0' + day
+  }
   if (hour.toString().length < 2) {
     hour = '0' + hour
   }
   if (minute.toString().length < 2) {
     minute = '0' + minute
   }
-  data.finishTime = hour + ':' + minute
+  data.finishTime = year + "-" + month + "-" + day + " " + hour + ':' + minute
 };
 const toAddressPage = () => {
   router.push({path: "/frontend/address"})
@@ -104,15 +141,36 @@ const goToPaySuccess = async () => {
   const params = {
     remark: data.note,
     payMethod: 1,
-    addressBookId: data.address.id
+    addressBookId: data.address.id,
+    estimatedDeliveryTime: data.finishTime,
+    deliveryStatus: data.deliveryStatus,
+    packAmount: 0,
+    tablewareNumber: 0,
+    tablewareStatus: 0,
+    amount: goodsPrice.value
+
   }
   const res = await addOrderApi(params)
+  data.orderNumber = res.data.orderNumber
+  // 如果创建订单成功，那么弹出选择支付方式
+  if (res.code === 1) {
+    showPaymentDialog()
+  }
+
+};
+
+const confirmPayment = async () => {
+  const params = {
+    orderNumber: data.orderNumber,
+    payMethod: data.selectedPayMethod,
+  }
+  const res = await orderPayment(params)
   if (res.code === 1) {
     await router.push({path: "/frontend/pay-success"})
   } else {
     $notify({type: 'warning', message: res.msg});
   }
-};
+}
 
 //网络图片路径转换
 const imgPathConvert = path => imgPath(path);
@@ -138,6 +196,26 @@ const imgPathConvert = path => imgPath(path);
         <div class="divSplit"></div>
         <div class="divFinishTime">预计{{ data.finishTime }}送达</div>
       </div>
+      <div class="deliveryStatus">
+        <div class="deliveryTitle">配送方式</div>
+        <div class="deliveryOptions">
+          <div
+              class="deliveryOption"
+              :class="{ active: data.deliveryStatus === 1 }"
+              @click="changeDeliveryStatus(1)"
+          >
+            <span>立即送达</span>
+          </div>
+          <div
+              class="deliveryOption"
+              :class="{ active: data.deliveryStatus === 2 }"
+              @click="changeDeliveryStatus(2)"
+          >
+            <span>具体时间送达</span>
+            <span v-if="data.deliveryStatus === 2" class="deliveryTime">{{ data.finishTime }}</span>
+          </div>
+        </div>
+      </div>
       <div class="order">
         <div class="title">订单明细</div>
         <div class="divSplit"></div>
@@ -162,7 +240,7 @@ const imgPathConvert = path => imgPath(path);
       </div>
       <div class="note">
         <div class="title">备注</div>
-        <van-field
+        <el-input
             v-model="data.note"
             rows="2"
             autosize
@@ -189,6 +267,28 @@ const imgPathConvert = path => imgPath(path);
           @click="goToPaySuccess">去支付
       </div>
     </div>
+  </div>
+
+  <div>
+    <Dialog v-model:show="data.showPayDialog" :show-confirm-button="false" class="dialogFlavor">
+      <div class="dialogTitle">选择支付方式</div>
+      <div class="payMethodList">
+        <div
+            v-for="method in payMethods"
+            :key="method.id"
+            class="payMethodItem"
+            :class="{ active: data.selectedPayMethod === method.id }"
+            @click="selectPayMethod(method.id)"
+        >
+          <i :class="`iconfont icon-${method.icon}`"></i>
+          <span>{{ method.name }}</span>
+        </div>
+      </div>
+      <div class="dialogFooter">
+        <el-button type="primary" @click="confirmPayment">确认支付</el-button>
+        <el-button @click="data.showPayDialog = false">取消</el-button>
+      </div>
+    </Dialog>
   </div>
 </template>
 

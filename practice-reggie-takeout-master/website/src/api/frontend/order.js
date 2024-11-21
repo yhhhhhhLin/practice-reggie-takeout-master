@@ -23,7 +23,8 @@ export const orderListApi = () => request({
 
 //分页查询订单
 export const orderPagingApi = data => request({
-    'url': '/order/userPage',
+    // 'url': '/order/userPage',
+    'url': '/order/historyOrders',
     'method': 'get',
     params: {...data}
 });
@@ -34,3 +35,9 @@ export const orderAgainApi = data => request({
     'method': 'post',
     data
 });
+
+export const orderPayment = data => request({
+    'url': '/order/payment',
+    'method': 'put',
+    data
+})

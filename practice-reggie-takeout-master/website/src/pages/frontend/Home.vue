@@ -431,7 +431,7 @@ async function dishDetails(item) {
               <div class="divName">{{ item.name }}</div>
               <div class="divDesc">{{ item.description }}</div>
               <div class="divDesc">{{ '月销' + (item.saleNum ? item.saleNum : 0) }}</div>
-              <div class="divBottom"><span>￥</span><span>{{ item.price / 100 }}</span></div>
+              <div class="divBottom"><span>￥</span><span>{{ item.price  }}</span></div>
               <div class="divNum">
                 <div v-if="item.number > 0" class="divSubtract">
                   <img src="@/assets/frontend/subtract.png" @click.prevent.stop="subtractCart(item)" alt=""/>

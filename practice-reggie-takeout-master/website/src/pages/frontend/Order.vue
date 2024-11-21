@@ -58,6 +58,7 @@ const getList = async () => {
         item.orderDetails.forEach(ele => {
           number += ele.number
         })
+        console.log('number='+number)
         item.sumNum = number
       })
     }

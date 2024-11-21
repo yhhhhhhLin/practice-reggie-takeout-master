@@ -126,7 +126,7 @@ const toPageLogin = async () => {
       <div class="divUser">
         <img src="@/assets/frontend/headPage.png" alt=""/>
         <div class="desc">
-          <div class="divName">林之迷 <img src="@/assets/frontend/women.png" alt=""/></div>
+          <div class="divName">小程序用户 <img src="@/assets/frontend/women.png" alt=""/></div>
           <div class="divPhone">{{ data.userPhone }}</div>
         </div>
       </div>
@@ -134,15 +134,15 @@ const toPageLogin = async () => {
     <div class="divContent">
       <div class="divLinks">
         <div class="item" @click="toAddressPage">
-          <img src="@/assets/frontend/locations.png" alt=""/>
-          <span>地址管理</span>
-          <i class="el-icon-arrow-right"></i>
+          <img src="@/assets/frontend/locations.png" alt="地址icon"/>
+          <p>地址管理</p>
+<!--          <i class="el-icon-arrow-right">地址</i>-->
         </div>
         <div class="divSplit"></div>
         <div class="item" @click="toOrderPage">
           <img src="@/assets/frontend/orders.png" alt=""/>
-          <span>历史订单</span>
-          <i class="el-icon-arrow-right"></i>
+          <p>历史订单</p>
+<!--          <i class="el-icon-arrow-right"></i>-->
         </div>
       </div>
       <div class="divOrders" v-if="data.order[0]">
