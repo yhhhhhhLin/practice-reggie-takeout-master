@@ -19,7 +19,7 @@ export const queryOrderDetailById = (id) =>
 // 取消，派送，完成接口
 export const editOrderDetail = (params) =>
     request({
-        url: '/order',
+        url: '/order/status',
         method: 'put',
         data: {...params}
     })

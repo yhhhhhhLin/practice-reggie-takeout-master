@@ -36,6 +36,11 @@ export const orderAgainApi = data => request({
     data
 });
 
+export const cancelOrderApi = data => request({
+    'url': '/order/cancel/'+data.id,
+    'method': 'put',
+});
+
 export const orderPayment = data => request({
     'url': '/order/payment',
     'method': 'put',

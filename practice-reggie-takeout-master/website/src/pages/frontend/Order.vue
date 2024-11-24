@@ -9,7 +9,7 @@
 <script setup>
 import {onMounted, reactive} from "vue";
 import {base} from "@/js/frontend/base.js";
-import {orderAgainApi, orderPagingApi} from "@/api/frontend/order.js";
+import {cancelOrderApi, orderAgainApi, orderPagingApi, orderPayment} from "@/api/frontend/order.js";
 import {useRouter} from "vue-router";
 
 const router = useRouter()
@@ -55,10 +55,10 @@ const getList = async () => {
     if (records && Array.isArray(records)) {
       records.forEach(item => {
         let number = 0
-        item.orderDetails.forEach(ele => {
+        item.orderDetailList.forEach(ele => {
           number += ele.number
         })
-        console.log('number='+number)
+        console.log('number=' + number)
         item.sumNum = number
       })
     }
@@ -81,6 +81,32 @@ const addOrderAgain = async order => {
   }
 };
 
+// 付款
+const payOrder = async order => {
+
+  const params = {
+    orderNumber: order.number,
+    payMethod: 1,
+  }
+  const res = await orderPayment(params)
+  if (res.code === 1) {
+    window.location.reload()
+  } else {
+    $notify({type: 'warning', message: res.msg});
+  }
+};
+
+const cancelOrder = async order => {
+  // TODO 待接单状态的时候可以取消订单
+  const res = await cancelOrderApi({id: order.id})
+  if (res.code === 1) {
+    $message({type: 'info', message: '已取消'})
+    window.location.reload()
+  } else {
+    $notify({type: 'warning', message: res.msg});
+  }
+};
+
 const getStatus = status => {
   let str = ''
   switch (status) {
@@ -88,16 +114,22 @@ const getStatus = status => {
       str = '待付款'
       break;
     case 2:
-      str = '正在派送'
+      str = '待接单'
       break;
     case 3:
-      str = '已派送'
+      str = '已接单'
       break;
     case 4:
-      str = '已完成'
+      str = '派送中'
       break;
     case 5:
+      str = '已完成'
+      break;
+    case 6:
       str = '已取消'
+      break;
+    case 7:
+      str = '已退款'
       break;
 
   }
@@ -109,7 +141,7 @@ const getStatus = status => {
   <div id="order" class="app">
     <div class="divHead">
       <div class="divTitle">
-        <i class="el-icon-arrow-left" @click="goBack"></i>菩提阁
+        <i class="el-icon-arrow-left" @click="goBack"></i>张总炒饭
       </div>
     </div>
     <div class="divBody" v-if="data.orderList.length > 0">
@@ -126,7 +158,7 @@ const getStatus = status => {
             <!-- <span>正在派送</span> -->
           </div>
           <div class="dishList">
-            <div v-for="(item,index) in order.orderDetails" :key="index" class="item">
+            <div v-for="(item,index) in order.orderDetailList" :key="index" class="item">
               <span>{{ item.name }}</span>
               <span>x{{ item.number }}</span>
             </div>
@@ -134,8 +166,14 @@ const getStatus = status => {
           <div class="result">
             <span>共{{ order.sumNum }} 件商品,实付</span><span class="price">￥{{ order.amount }}</span>
           </div>
-          <div class="btn" v-if="order.status === 4">
+          <div class="btn" v-if="order.status === 1">
+            <div class="btnAgain" @click="payOrder(order)">付款</div>
+          </div>
+          <div class="btn" v-if="order.status === 5">
             <div class="btnAgain" @click="addOrderAgain(order)">再来一单</div>
+          </div>
+          <div class="btn" v-if="order.status === 2">
+            <div class="btnAgain" @click="cancelOrder(order)">取消订单</div>
           </div>
         </van-cell>
       </van-list>

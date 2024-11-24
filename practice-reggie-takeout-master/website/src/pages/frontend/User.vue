@@ -24,7 +24,7 @@ const data = reactive({
   order: [{
     orderTime: '',//下单时间
     status: undefined,//订单状态 1已结账，2未结账，3已退单，4已完成，5已取消
-    orderDetails: [{
+    orderDetailList: [{
       name: '',//菜品名称
       number: undefined,//数量
     }],//明细
@@ -82,15 +82,18 @@ const getStatus = status => {
       str = '待付款'
       break;
     case 2:
-      str = '正在派送'
+      str = '待接单'
       break;
     case 3:
-      str = '已派送'
+      str = '已接单'
       break;
     case 4:
-      str = '已完成'
+      str = '派送中'
       break;
     case 5:
+      str = '已完成'
+      break;
+    case 6:
       str = '已取消'
       break;
 
@@ -153,7 +156,7 @@ const toPageLogin = async () => {
           <!-- <span>正在派送</span> -->
         </div>
         <div class="dishList">
-          <div v-for="(item,index) in data.order[0].orderDetails" :key="index" class="item">
+          <div v-for="(item,index) in data.order[0].orderDetailList" :key="index" class="item">
             <span>{{ item.name }}</span>
             <span>x{{ item.number }}</span>
           </div>
@@ -162,7 +165,7 @@ const toPageLogin = async () => {
           <span>共{{ data.order[0].sumNum }} 件商品,实付</span>
           <span class="price">￥{{ data.order[0].amount }}</span>
         </div>
-        <div class="btn" v-if="data.order[0].status === 4">
+        <div class="btn" v-if="data.order[0].status === 5">
           <div class="btnAgain" @click="addOrderAgain">再来一单</div>
         </div>
       </div>

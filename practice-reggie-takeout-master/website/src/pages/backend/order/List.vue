@@ -57,16 +57,22 @@ const getOrderType = row => {
       str = '待付款'
       break;
     case 2:
-      str = '正在派送'
+      str = '待接单'
       break;
     case 3:
-      str = '已派送'
+      str = '已接单'
       break;
     case 4:
-      str = '已完成'
+      str = '派送中'
       break;
     case 5:
+      str = '已完成'
+      break;
+    case 6:
       str = '已取消'
+      break;
+    case 7:
+      str = '已退款'
       break;
 
   }
@@ -82,9 +88,14 @@ const goDetail = (row) => {
 
 // 取消，派送，完成
 function cancelOrDeliveryOrComplete(status, id) {
+  const params = {
+    status,
+    id
+  }
+
   editOrderDetail(params).then(res => {
     if (res.code === 1) {
-      $message.success(status === 3 ? '订单已派送' : '订单已完成')
+      $message.success(status === 3 ? '操作成功' : '订单已完成')
       init()
     } else {
       $message.error(res.msg || '操作失败')
@@ -92,10 +103,6 @@ function cancelOrDeliveryOrComplete(status, id) {
   }).catch(err => {
     $message.error('请求出错了：' + err)
   })
-  const params = {
-    status,
-    id
-  }
 }
 
 const handleClose = () => {
@@ -158,11 +165,16 @@ const handleCurrentChange = (val) => {
             <el-divider v-if="row.status === 2" direction="vertical"></el-divider>
             <el-button v-if="row.status === 2" class="blueBug" type="text"
                        @click="cancelOrDeliveryOrComplete(3, row.id)">
-              派送
+              接单
             </el-button>
             <el-divider v-if="row.status === 3" direction="vertical"></el-divider>
             <el-button v-if="row.status === 3" class="blueBug" type="text"
                        @click="cancelOrDeliveryOrComplete(4, row.id)">
+              派送
+            </el-button>
+            <el-divider v-if="row.status === 4" direction="vertical"></el-divider>
+            <el-button v-if="row.status === 4" class="blueBug" type="text"
+                       @click="cancelOrDeliveryOrComplete(5, row.id)">
               完成
             </el-button>
           </template>

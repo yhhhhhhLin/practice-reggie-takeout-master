@@ -399,7 +399,7 @@ async function dishDetails(item) {
       <div class="divStatic">
         <img alt="" class="logo" src="@/assets/frontend/logo.png"/>
         <div class="divDesc">
-          <div class="divName">菩提阁餐厅</div>
+          <div class="divName">张总炒饭</div>
           <div class="divSend">
             <span><img alt="" src="@/assets/frontend/time.png"/> 距离1.5km</span>
             <span><img alt="" src="@/assets/frontend/money.png"/> 配送费6元</span>
@@ -408,7 +408,7 @@ async function dishDetails(item) {
         </div>
       </div>
       <div class="divDesc">
-        简介: 菩提阁中餐厅是菩提阁点餐的独立的品牌，定位“大众 化的美食外送餐饮”，旨为顾客打造专业美食。
+        简介: 张总炒饭，正宗炒饭，不好吃不要钱。
       </div>
     </div>
     <div class="divBody">

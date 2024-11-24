@@ -54,7 +54,7 @@ function getFinishTime() {
     <div class="divHead">
       <div class="divTitle">
         <i class="el-icon-arrow-left" @click="goBack"></i>
-        菩提阁
+        张总炒饭
         <img src="@/assets/frontend/home.png" @click="toMainPage"/>
       </div>
     </div>

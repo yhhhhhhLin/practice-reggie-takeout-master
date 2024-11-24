@@ -100,29 +100,19 @@ const defaultAddress = async () => {
     await router.push({path: "/frontend/address-edit"})
   }
 };
-//获取送达时间
 const getFinishTime = () => {
-  let now = new Date()
-  let year = now.getFullYear()
-  let month = now.getMonth() + 1
-  let day = now.getDate()
-  let hour = now.getHours() + 1
-  let minute = now.getMinutes()
+  let now = new Date();
+  now.setHours(now.getHours() + 1);
 
+  const padZero = (num) => (num < 10 ? '0' + num : num);
 
-  if (month.toString().length < 2) {
-    month = '0' + month
-  }
-  if (day.toString().length < 2) {
-    day = '0' + day
-  }
-  if (hour.toString().length < 2) {
-    hour = '0' + hour
-  }
-  if (minute.toString().length < 2) {
-    minute = '0' + minute
-  }
-  data.finishTime = year + "-" + month + "-" + day + " " + hour + ':' + minute
+  let year = now.getFullYear();
+  let month = padZero(now.getMonth() + 1);
+  let day = padZero(now.getDate());
+  let hour = padZero(now.getHours());
+  let minute = padZero(now.getMinutes());
+
+  data.finishTime = `${year}-${month}-${day} ${hour}:${minute}`;
 };
 const toAddressPage = () => {
   router.push({path: "/frontend/address"})
@@ -180,7 +170,7 @@ const imgPathConvert = path => imgPath(path);
   <div id="add_order" class="app">
     <div class="divHead">
       <div class="divTitle">
-        <i class="el-icon-arrow-left" @click="goBack"></i>菩提阁
+        <i class="el-icon-arrow-left" @click="goBack"></i>张总炒饭
       </div>
     </div>
     <div class="divContent">
