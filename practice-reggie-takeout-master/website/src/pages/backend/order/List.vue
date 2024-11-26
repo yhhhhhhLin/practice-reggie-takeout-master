@@ -154,7 +154,7 @@ const handleCurrentChange = (val) => {
         <el-table-column label="下单时间" min-width="100" prop="orderTime"></el-table-column>
         <el-table-column label="实收金额" prop="amount">
           <template #default="{ row }">
-            <span>￥{{ row.amount }}</span>
+            <span>￥{{ row.amount / 100 }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" prop="btn">

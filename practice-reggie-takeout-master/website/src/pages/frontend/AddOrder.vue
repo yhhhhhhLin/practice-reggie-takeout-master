@@ -221,7 +221,7 @@ const imgPathConvert = path => imgPath(path);
               <div class="numPrice">
                 <span class="num">x{{ item.number }}</span>
                 <div class="price">
-                  <span class="spanMoney">￥</span>{{ item.amount }}
+                  <span class="spanMoney">￥</span>{{ item.amount / 100 }}
                 </div>
               </div>
             </div>
@@ -249,7 +249,7 @@ const imgPathConvert = path => imgPath(path);
       </div>
       <div class="divNum">
         <span>￥</span>
-        <span>{{ goodsPrice }}</span>
+        <span>{{ goodsPrice / 100}}</span>
       </div>
       <div class="divPrice"></div>
       <div

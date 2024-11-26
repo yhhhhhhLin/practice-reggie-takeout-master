@@ -163,7 +163,7 @@ const toPageLogin = async () => {
         </div>
         <div class="result">
           <span>共{{ data.order[0].sumNum }} 件商品,实付</span>
-          <span class="price">￥{{ data.order[0].amount }}</span>
+          <span class="price">￥{{ data.order[0].amount / 100 }}</span>
         </div>
         <div class="btn" v-if="data.order[0].status === 5">
           <div class="btnAgain" @click="addOrderAgain">再来一单</div>

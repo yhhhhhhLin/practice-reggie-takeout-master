@@ -124,7 +124,8 @@ onBeforeUnmount(() => {
       <div class="sidebar-container">
         <div class="logo">
           <!-- <img src="images/logo.png" width="122.5" alt="" /> -->
-          <img alt="" src="@/assets/backend/login/login-logo.png" style="width: 117px; height: 32px"/>
+<!--          TODO 改logo-->
+          <img alt="" src="@/assets/backend/login/login-logo.png" style="padding: 46px 37px 67px 36px;width: 117px; height: 32px"/>
         </div>
 
         <el-scrollbar wrap-class="scrollbar-wrapper">

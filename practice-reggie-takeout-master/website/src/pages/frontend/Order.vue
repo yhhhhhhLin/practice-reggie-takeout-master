@@ -164,7 +164,7 @@ const getStatus = status => {
             </div>
           </div>
           <div class="result">
-            <span>共{{ order.sumNum }} 件商品,实付</span><span class="price">￥{{ order.amount }}</span>
+            <span>共{{ order.sumNum }} 件商品,实付</span><span class="price">￥{{ order.amount / 100 }}</span>
           </div>
           <div class="btn" v-if="order.status === 1">
             <div class="btnAgain" @click="payOrder(order)">付款</div>

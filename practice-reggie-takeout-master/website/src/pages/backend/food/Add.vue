@@ -9,7 +9,7 @@
 <script setup>
 import {computed, onMounted, reactive, ref} from "vue";
 import {requestUrlParam} from "@/js/backend/index.js";
-import {addDish, editDish, getCategoryList, queryDishById} from "@/api/backend/food.js";
+import {addDish, commonDownload, commonUpload, editDish, getCategoryList, queryDishById} from "@/api/backend/food.js";
 import {useRouter} from "vue-router";
 
 const router = useRouter()
@@ -89,7 +89,6 @@ onMounted(() => {
 
 const init = async () => {
   queryDishById(data.id).then(res => {
-    console.log(res)
     if (String(res.code) === '1') {
       data.ruleForm = {...res.data}
       data.ruleForm.price = String(res.data.price / 100)
@@ -101,8 +100,8 @@ const init = async () => {
       }))
       console.log('data.dishFlavors', data.dishFlavors)
       // data.ruleForm.id = res.data.data.categoryId
-      // data.imageUrl = res.data.data.image
-      data.imageUrl = `/common/download?name=${res.data.image}`
+      data.imageUrl = res.data.image
+      // data.imageUrl = `/common/download?name=${res.data.image}`
     } else {
       $message.error(res.msg || '操作失败')
     }
@@ -262,13 +261,26 @@ function submitForm(formName, st) {
   })
 }
 
+function beforeUpload(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  commonUpload(formData).then((res) => {
+    data.imageUrl = res.data
+    data.ruleForm.image = res.data
+    return false
+
+  }).catch(error => {
+    console.log('上传文件发生错误' + error)
+  })
+  return false
+}
+
 function handleAvatarSuccess(response, file, fileList) {
   // 拼接down接口预览
   if (response.code === 0 && response.msg === '未登录') {
     router.push({path: "/backend/login"})
   } else {
-    data.imageUrl = `/common/download?name=${response.data}`
-    data.ruleForm.image = response.data
+    // data.ruleForm.image = response.data
   }
 }
 
@@ -440,9 +452,9 @@ function goBack() {
             <el-upload
                 ref="upload"
                 :on-change="onChange"
+                :before-upload="beforeUpload"
                 :on-success="handleAvatarSuccess"
                 :show-file-list="false"
-                action="/common/upload"
                 class="avatar-uploader"
             >
               <img

@@ -40,7 +40,7 @@ const init = async () => {
   })
 };
 
-const getImage = image => `/common/download?name=${image}`;
+const getImage = image => image;
 
 const handleQuery = () => {
   data.page = 1;
@@ -201,7 +201,7 @@ const handleCurrentChange = val => {
         </el-table-column>
         <el-table-column label="售卖状态">
           <template #default="scope">
-            <span>{{ scope.row.status === '0' ? '停售' : '启售' }}</span>
+            <span>{{ scope.row.status === 0 ? '停售' : '启售' }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -229,7 +229,7 @@ const handleCurrentChange = val => {
                 type="text"
                 @click="statusHandle(scope.row)"
             >
-              {{ scope.row.status === '0' ? '启售' : '停售' }}
+              {{ scope.row.status === 0 ? '启售' : '停售' }}
             </el-button>
             <el-button
                 class="delBut non"

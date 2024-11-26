@@ -1,10 +1,9 @@
 .app-wrapper {
     position: relative;
-    height: 100%;
+    height: 100vh;
     width: 100%;
-    overflow-y: hidden;
+    overflow: auto;
     min-width: 1366px;
-    overflow-x: auto;
     display: flex;
 }
 

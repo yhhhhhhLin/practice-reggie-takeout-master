@@ -355,7 +355,8 @@ function dialogFlavorAddCart() {
 
 //网络图片路径转换
 function imgPathConvert(path) {
-  return imgPath(path)
+  return path
+  // return imgPath(path)
 }
 
 //跳转到去结算界面
@@ -431,7 +432,7 @@ async function dishDetails(item) {
               <div class="divName">{{ item.name }}</div>
               <div class="divDesc">{{ item.description }}</div>
               <div class="divDesc">{{ '月销' + (item.saleNum ? item.saleNum : 0) }}</div>
-              <div class="divBottom"><span>￥</span><span>{{ item.price  }}</span></div>
+              <div class="divBottom"><span>￥</span><span>{{ item.price / 100 }}</span></div>
               <div class="divNum">
                 <div v-if="item.number > 0" class="divSubtract">
                   <img src="@/assets/frontend/subtract.png" @click.prevent.stop="subtractCart(item)" alt=""/>
@@ -463,7 +464,7 @@ async function dishDetails(item) {
       </div>
       <div class="divNum">
         <span>￥</span>
-        <span>{{ goodsPrice }}</span>
+        <span>{{ goodsPrice / 100 }}</span>
       </div>
       <div class="divPrice"></div>
       <div

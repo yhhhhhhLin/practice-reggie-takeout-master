@@ -62,6 +62,17 @@ export const queryDishList = (params) =>
         params
     })
 
+
+export const commonUpload = (params) =>
+    request({
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        url: `/common/upload`,
+        method: 'post',
+        data: params
+    })
+
 // 文件down预览
 export const commonDownload = (params) =>
     request({
@@ -80,3 +91,4 @@ export const dishStatusByStatus = (params) =>
         method: 'post',
         params: {ids: params.id}
     })
+

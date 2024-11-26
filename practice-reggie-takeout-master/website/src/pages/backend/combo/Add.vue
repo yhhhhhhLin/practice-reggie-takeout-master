@@ -10,7 +10,7 @@
 import {computed, onMounted, reactive, ref, watch} from "vue";
 import {requestUrlParam} from "@/js/backend/index.js";
 import {addSetmeal, editSetmeal, querySetmealById} from "@/api/backend/combo.js";
-import {getCategoryList, queryDishList} from "@/api/backend/food.js";
+import {commonUpload, getCategoryList, queryDishList} from "@/api/backend/food.js";
 import {useRouter} from "vue-router";
 
 const router = useRouter()
@@ -258,6 +258,20 @@ function handleAvatarSuccess(response, file, fileList) {
   }
 }
 
+function beforeUpload(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  commonUpload(formData).then((res) => {
+    data.imageUrl = res.data
+    data.ruleForm.image = res.data
+    return false
+
+  }).catch(error => {
+    console.log('上传文件发生错误' + error)
+  })
+  return false
+}
+
 function onChange(file) {
   if (file) {
     const suffix = file.name.split('.')[1]
@@ -394,11 +408,11 @@ const delCheck = ind => {
                   <div class="addBut" style="margin-bottom: 20px" @click="openAddDish">+ 添加菜品</div>
                   <div class="table">
                     <el-table :data="data.dishTable" style="width: 100%">
-                      <el-table-column align="center" label="名称" prop="name" width="180"></el-table-column>
-                      <el-table-column label="原价" prop="price" width="180">
+                      <el-table-column align="center" label="名称" prop="name" width="180px"></el-table-column>
+                      <el-table-column label="原价" prop="price" width="180px">
                         <template #default="scope"> {{ Number(scope.row.price) / 100 }}</template>
                       </el-table-column>
-                      <el-table-column align="center" label="份数" prop="address">
+                      <el-table-column align="center" label="份数" prop="address" width="150px">
                         <template #default="scope">
                           <el-input-number
                               v-model="scope.row.copies"
@@ -426,9 +440,9 @@ const delCheck = ind => {
             <el-upload
                 ref="upload"
                 :on-change="onChange"
+                :before-upload="beforeUpload"
                 :on-success="handleAvatarSuccess"
                 :show-file-list="false"
-                action="/common/upload"
                 class="avatar-uploader"
             >
               <img v-if="data.imageUrl" :src="data.imageUrl" alt="avatar" class="avatar"/>
@@ -484,7 +498,7 @@ const delCheck = ind => {
               class="tabBut"
           >
               <span
-                  v-for="(item, index) in dishType"
+                  v-for="(item, index) in data.dishType"
                   :key="index"
                   :class="{act:index === data.keyInd}"
                   @click="checkTypeHandle(index, item.id)"

@@ -8,7 +8,7 @@
 
 <script setup>
 import {onMounted, reactive} from "vue";
-import {deleteDish, dishStatusByStatus, getDishPage} from "@/api/backend/food.js";
+import {commonDownload, deleteDish, dishStatusByStatus, getDishPage} from "@/api/backend/food.js";
 
 const data = reactive({
   input: '',
@@ -41,7 +41,11 @@ const init = async () => {
 }
 
 const getImage = (image) => {
-  return `http://localhost:8080/common/download?name=${image}`
+  // commonDownload({name:image}).then(res => {
+  //   console.log(res.data)
+  // })
+  return image
+  // return `http://localhost:8080/admin/common/download?name=${image}`
 }
 
 const handleQuery = () => {
@@ -148,7 +152,7 @@ const handleCurrentChange = (val) => {
         <el-table-column label="菜品名称" prop="name"></el-table-column>
         <el-table-column align="center" label="图片" prop="image">
           <template #default="{ row }">
-            <el-image :preview-src-list="[ `/common/download?name=${row.image}` ]" :src="getImage(row.image)"
+            <el-image :src="getImage(row.image)"
                       style="width: auto; height: 40px; border:none;cursor: pointer;">
               <div slot="error" class="image-slot">
                 <img src="@/assets/backend/noImg.png" style="width: auto; height: 40px; border:none;">
@@ -164,7 +168,7 @@ const handleCurrentChange = (val) => {
         </el-table-column>
         <el-table-column label="售卖状态">
           <template #default="scope">
-            <span style="margin-right: 10px;">{{ scope.row.status === '0' ? '停售' : '启售' }}</span>
+            <span style="margin-right: 10px;">{{ scope.row.status === 0 ? '停售' : '启售' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="最后操作时间" prop="updateTime">
@@ -175,7 +179,7 @@ const handleCurrentChange = (val) => {
               修改
             </el-button>
             <el-button class="blueBug" size="small" type="text" @click="statusHandle(scope.row)">
-              {{ scope.row.status === '0' ? '启售' : '停售' }}
+              {{ scope.row.status === 0 ? '启售' : '停售' }}
             </el-button>
             <el-button class="delBut non" size="small" type="text" @click="deleteHandle('单删', scope.row.id)">
               删除
@@ -183,8 +187,8 @@ const handleCurrentChange = (val) => {
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination :current-page.sync="page" :page-size="pageSize" :page-sizes="[10, 20, 30, 40]"
-                     :total="counts" class="pageList" layout="total, sizes, prev, pager, next, jumper"
+      <el-pagination :current-page.sync="data.page" :page-size="data.pageSize" :page-sizes="[10, 20, 30, 40]"
+                     :total="data.counts" class="pageList" layout="total, sizes, prev, pager, next, jumper"
                      @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
     </div>
   </div>
